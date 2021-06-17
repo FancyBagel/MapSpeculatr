@@ -40,3 +40,9 @@ class FrontViewSet(viewsets.ViewSet):
 		}
 
 		return render(request, 'maps.html', context)
+
+	def play(self, request):
+		context = {
+			"x" : 265767676767435.35,
+		}
+		return render(request, 'play.html', context)

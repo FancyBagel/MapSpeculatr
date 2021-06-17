@@ -8,4 +8,7 @@ urlpatterns = [
     path('maps', FrontViewSet.as_view({
         'get': 'list',
     })),
+    path('play', FrontViewSet.as_view({
+        'get': 'play',
+    })),
 ]

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Street View split-map-panes</title>
+    <script type="text/javascript">
+        function initialize() {
+            test('{{x}}');
+        }
+        function test(val) {
+            document.getElementById("coords").innerHTML = val;
+        }
+    </script>
+
+  </head>
+  <body onload="javascript:initialize()">
+	<div id="coords"></div>
+  </body>
+</html>
