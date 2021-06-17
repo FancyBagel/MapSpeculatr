@@ -1,5 +1,7 @@
-from django.shortcuts import render
+import json
+from django.shortcuts import render, redirect
 import requests
+from requests.api import head
 from requests.models import Response
 from rest_framework import viewsets
 from django.http import HttpResponse
@@ -24,6 +26,10 @@ def addmap(request):
 class FrontViewSet(viewsets.ViewSet):
 	def list(self, request):
 
+		#if 'player_id' in request.session:
+		#	return redirect('/play')
+		
+
 		r=requests.get('http://host.docker.internal:8000/api/app?format=json')
 
 		#print(r.json())
@@ -42,7 +48,23 @@ class FrontViewSet(viewsets.ViewSet):
 		return render(request, 'maps.html', context)
 
 	def play(self, request):
+		#if 'player_id' not in request.session:
+		#	return redirect('/maps')
 		context = {
 			"x" : 265767676767435.35,
 		}
 		return render(request, 'play.html', context)
+	def index(self, request):
+		request.session['player_id'] = int(11)
+		if 'player_id' not in request.session:
+			return redirect('/maps')
+		return render(request, 'index.html')
+
+	def confirm(self, request):
+		if 'player_id' not in request.session:
+		#	return redirect('/maps')
+			print('uh-oh')
+
+		data=json.dumps(request.data)
+		r=requests.post(url='http://host.docker.internal:8000/api/app', data=data, headers={'content-type': 'application/json'})
+		return render(request, 'index.html') #cokolwiek

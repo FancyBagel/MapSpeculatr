@@ -21,14 +21,13 @@ class MapViewSet(viewsets.ViewSet):
         map.save()
 
         list = request.data["list"]
-        #print(list.size())
-        #return Response(list.size())
+
         for element in list:
             location = Location(lat=element["lat"], lng=element["lng"], map=map)
             location.save()
 
-        maps = Map.objects.all()
-        json = MapSerializer(maps, many=True)
+        #maps = Map.objects.all()
+        #json = MapSerializer(maps, many=True)
         return Response(Location.objects.all().count())
         return Response(json.data)
 

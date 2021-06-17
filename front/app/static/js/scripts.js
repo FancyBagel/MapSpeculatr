@@ -63,7 +63,7 @@ function send() {
     json["name"] = document.getElementById('name').value;
     document.getElementById("coords").innerHTML = JSON.stringify(json);
     var xhr = new XMLHttpRequest();
-    var url = "http://localhost:8000/api/app";
+    var url = "/confirm";
     xhr.open("POST", url);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(json));

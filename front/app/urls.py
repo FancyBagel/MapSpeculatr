@@ -11,4 +11,10 @@ urlpatterns = [
     path('play', FrontViewSet.as_view({
         'get': 'play',
     })),
+    path('', FrontViewSet.as_view({
+        'get': 'index',
+    })),
+    path('confirm', FrontViewSet.as_view({
+        'post': 'confirm',
+    })),
 ]
