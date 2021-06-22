@@ -5,6 +5,7 @@ from requests.api import head
 from requests.models import Response
 from rest_framework import viewsets
 from django.http import HttpResponse
+from rest_framework.response import Response as RResponse
 
 # Create your views here.
 
@@ -48,16 +49,64 @@ class FrontViewSet(viewsets.ViewSet):
 		return render(request, 'maps.html', context)
 
 	def play(self, request):
-		#if 'player_id' not in request.session:
-		#	return redirect('/maps')
-		context = {
-			"x" : 265767676767435.35,
-		}
-		return render(request, 'play.html', context)
-	def index(self, request):
-		request.session['player_id'] = int(11)
 		if 'player_id' not in request.session:
 			return redirect('/maps')
+		#context = {
+		#	"x" : 265767676767435.35,
+		#}
+		#return render(request, 'play.html', context)
+
+		r=requests.get('http://host.docker.internal:8002/play/' + str(request.session['player_id']))
+		#print(r.json())
+
+		response = r.json()
+
+		if response['status'] == 'game_on':
+			context = {
+				'lat' : response['data']['lat'],
+				'lng' : response['data']['lng'],
+			}
+			return render(request, 'play.html', context)
+
+		#print(type(r.json()))
+
+		return RResponse(r.json())
+
+	def send(self, request):
+		if 'player_id' not in request.session:
+			return redirect('/maps')
+		#context = {
+		#	"x" : 265767676767435.35,
+		#}
+		#return render(request, 'play.html', context)
+
+		data={'lat': 2137,'lng': 2137}
+
+		print(type(request.data))
+		#print((json.dumps(data)))
+
+		r=requests.post('http://host.docker.internal:8002/play/' + str(request.session['player_id']), data=json.dumps(request.data), headers={'content-type': 'application/json'})
+
+		#print(type(json.loads(r.json())))
+		#print(json.loads(r.json())['lat'])
+
+		return RResponse("okk")
+
+	def new(self, request, map):
+		if 'player_id' not in request.session:
+			return redirect('/maps')
+
+		r=requests.get('http://host.docker.internal:8002/new/' + str(map) + '/' + str(request.session['player_id']))
+
+		#print(type(json.loads(r.json())))
+		#print(json.loads(r.json())['lat'])
+
+		return RResponse()
+
+	def index(self, request):
+		request.session['player_id'] = int(11)
+		#if 'player_id' not in request.session:
+		#	return redirect('/maps')
 		return render(request, 'index.html')
 
 	def confirm(self, request):

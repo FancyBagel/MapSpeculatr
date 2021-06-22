@@ -10,4 +10,7 @@ urlpatterns = [
     path('locations/<int:id>', MapViewSet.as_view({
         'get': 'locations',
     })),
+    path('location/<int:id>/<int:no>', MapViewSet.as_view({
+        'get': 'location',
+    })),
 ]

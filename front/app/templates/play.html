@@ -1,18 +1,117 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
   <head>
     <title>Street View split-map-panes</title>
-    <script type="text/javascript">
-        function initialize() {
-            test('{{x}}');
-        }
-        function test(val) {
-            document.getElementById("coords").innerHTML = val;
-        }
-    </script>
+    <script>
+      let panorama;
+      let map;
+      let marker;
+      let latlng;
+      var json = {};
+          
+      function processSVData(data, status) {
+          if (status === "OK") {
+              const location = data.location;
+              latLng = location.latLng;
+              marker.setPosition(location.latLng);
+              panorama.setPano(location.pano);
+              panorama.setPov({
+                  heading: 270,
+                  pitch: 0,
+              });
+              panorama.setVisible(true);
+          } else {
+              console.error("Street View data not found for this location.");
+          }
+      }
+      
+      function initialize() {
+          const loc = { lat: parseFloat('{{lat}}'), lng: parseFloat('{{lng}}')};
+          const mimuw = { lat: 52.211916160272324, lng: 20.98251877698795};
+          const sv = new google.maps.StreetViewService();
+      
+          map = new google.maps.Map(document.getElementById("map"), {
+              center: mimuw,
+              zoom: 14,
+              disableDefaultUI: true,
+              clickableIcons: false,
+          });
+        
+          panorama = new google.maps.StreetViewPanorama(
+              document.getElementById("pano"),
+              {
+                  position: loc,
+                  pov: {
+                      heading: 34,
+                      pitch: 10,
+                  },
+              }
+          );
+            
+          marker = new google.maps.Marker({
+              position: mimuw,
+              map,
+          });
+          
+          //map.setStreetView(panorama);
+          map.addListener("click", (event) => {
+              //sv.getPanorama({ location: event.latLng, radius: 50 }, processSVData);
+              latLng = event.latLng;
+              marker.setPosition(event.latLng);
+          });
+      }
 
+      function send() {
+          json = { "lat": latLng.lat(), "lng": latLng.lng()}
+          document.getElementById("coords").innerHTML = JSON.stringify(json);
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function() {
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+              var status = xhr.status;
+              if (status === 0 || (status >= 200 && status < 400)) {
+                // The request has been completed successfully
+                window.location.replace("/play");
+              } else {
+                // Oh no! There has been an error with the request!
+              }
+            }
+          }
+          var url = "/send";
+          xhr.open("POST", url);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.send(JSON.stringify(json));
+      }
+      
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #map,
+      #pano {
+        float: left;
+        height: 100%;
+        width: 50%;
+      }
+    </style>
   </head>
-  <body onload="javascript:initialize()">
+  <body>
+    <input type="text" id="name">test</input>
+    <button type="button" onclick="send()">SEND</button>
+    <div id="map"></div>
+    <div id="pano"></div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDukeE2EPVb-eRGltH24IL8KUXm4ysuwe0&callback=initialize&libraries=&v=weekly"
+      async
+    ></script>
 	<div id="coords"></div>
   </body>
 </html>

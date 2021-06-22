@@ -25,7 +25,7 @@ SECRET_KEY = '08_9*gu%wf1o*0x92n%l7y!7q_nhu4*6kw+e41f%)$6^&4+(tp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['host.docker.internal', 'localhost']
 
 
 # Application definition

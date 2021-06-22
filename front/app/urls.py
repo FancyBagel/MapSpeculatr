@@ -11,6 +11,12 @@ urlpatterns = [
     path('play', FrontViewSet.as_view({
         'get': 'play',
     })),
+    path('send', FrontViewSet.as_view({
+        'post': 'send',
+    })),
+    path('new/<int:map>', FrontViewSet.as_view({
+        'get': 'new',
+    })),
     path('', FrontViewSet.as_view({
         'get': 'index',
     })),
