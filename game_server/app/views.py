@@ -84,8 +84,10 @@ class ServerViewSet(viewsets.ViewSet):
         g.points = g.points + res
         g.current = g.current + 1
         g.save()
-        
-        return Response("ok")
+
+        resp = {'lat' : ans_lat, 'lng' : ans_lng, 'elat' : g.lat, 'elng' : g.lng}
+        print(resp)
+        return Response(data=resp)
 
         #r=requests.get('http://host.docker.internal:8000/api/location/'+str(map))
         #print(r.json())

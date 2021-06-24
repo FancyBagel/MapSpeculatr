@@ -67,6 +67,11 @@ class FrontViewSet(viewsets.ViewSet):
 				'lng' : response['data']['lng'],
 			}
 			return render(request, 'play.html', context)
+		if response['status'] == 'game_finished':
+			context = {
+				'distance' : response['result']
+			}
+			return render(request, 'finished.html', context)
 
 		#print(type(r.json()))
 
@@ -87,10 +92,11 @@ class FrontViewSet(viewsets.ViewSet):
 
 		r=requests.post('http://host.docker.internal:8002/play/' + str(request.session['player_id']), data=json.dumps(request.data), headers={'content-type': 'application/json'})
 
+		print(r.json())
 		#print(type(json.loads(r.json())))
 		#print(json.loads(r.json())['lat'])
 
-		return RResponse("okk")
+		return RResponse(data=r.json())
 
 	def new(self, request, map):
 		if 'player_id' not in request.session:
@@ -104,7 +110,7 @@ class FrontViewSet(viewsets.ViewSet):
 		return RResponse()
 
 	def index(self, request):
-		request.session['player_id'] = int(11)
+		#request.session['player_id'] = int(11)
 		#if 'player_id' not in request.session:
 		#	return redirect('/maps')
 		return render(request, 'index.html')
@@ -117,3 +123,26 @@ class FrontViewSet(viewsets.ViewSet):
 		data=json.dumps(request.data)
 		r=requests.post(url='http://host.docker.internal:8000/api/app', data=data, headers={'content-type': 'application/json'})
 		return render(request, 'index.html') #cokolwiek
+	
+	def login(self, request):
+		return render(request, 'login.html')
+	
+	def verify(self, request):
+		dict = {}
+		dict['name'] = request.POST['name']
+		dict['password'] = request.POST['password']
+		data = json.dumps(dict)
+		print(data)
+		r=requests.get(url='http://host.docker.internal:8003/login', data=data, headers={'content-type': 'application/json'})
+		if r.status_code != 200:
+			return redirect('/login') 
+		print(r.raw)
+		request.session['player_id'] = r.raw
+		return redirect('')
+
+
+	
+	def logout(self, request):
+		if 'player_id' in request.session:
+			del request.session['player_id']
+		return Response("OK")

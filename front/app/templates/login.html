@@ -1,0 +1,15 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+      <h1>Log in</h1>
+      <form action="{% url 'app:verify' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Username</label>
+        <input type="text" name="name"> <br>
+        <label>Password</label>
+        <input type="text" name="password"> <br>
+        <input type="submit" value="LOG IN">
+  </body>
+</html>
