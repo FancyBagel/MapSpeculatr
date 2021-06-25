@@ -136,11 +136,28 @@ class FrontViewSet(viewsets.ViewSet):
 		r=requests.get(url='http://host.docker.internal:8003/login', data=data, headers={'content-type': 'application/json'})
 		if r.status_code != 200:
 			return redirect('/login') 
-		print(r.raw)
-		request.session['player_id'] = r.raw
-		return redirect('')
+		data = json.loads(r.json())
+		request.session['player_id'] = data['id']
+		return redirect('/main')
 
-
+	def register(self, request):
+		return render(request, 'register.html')
+	
+	def verify_register(self, request):
+		name = request.POST['name']
+		password = request.POST['password']
+		rep = request.POST['rep']
+		if password != rep:
+			return redirect('/register')
+		
+		dict = {}
+		dict['name'] = name
+		dict['password'] = password 
+		data = json.dumps(dict)
+		r=requests.get(url='http://host.docker.internal:8003/register', data=data, headers={'content-type': 'application/json'})
+		if r.status_code != 200:
+			return redirect('/register') 
+		return redirect('/main')
 	
 	def logout(self, request):
 		if 'player_id' in request.session:

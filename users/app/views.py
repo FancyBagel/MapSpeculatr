@@ -11,6 +11,10 @@ class UserViewSet(viewsets.ViewSet):
         info = json.loads(request.body)
         newName = info['name']
         password = info['password']
+        print(newName)
+        print(password)
+        print(User.objects.filter(name=newName).count())
+        print(User.objects.filter(name=newName))
         if not User.objects.filter(name=newName).count() == 0:
             return Response(status=404)
 
@@ -30,8 +34,11 @@ class UserViewSet(viewsets.ViewSet):
         cand = User.objects.get(name=newName)
         if cand.password != password:
             return Response(status=404)
+        dict={}
+        dict['id']=cand.id
+        data = json.dumps(dict)
 
-        return Response(data=cand.id, status=200)
+        return Response(data, status=200)
 
     def user_list(self, request):
         list = {}
