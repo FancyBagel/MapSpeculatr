@@ -67,4 +67,5 @@ function send() {
     xhr.open("POST", url);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(json));
+    window.location.replace("/maps");
 }

@@ -1,3 +1,29 @@
-{% for m in maps %}
-{{m}}
-{% endfor %}
+<html>
+    <head>
+        <style type='text/css'>
+            body {
+                background-color: lightgrey;
+                font-family: "Courier New", monospace;
+            }
+            .map {
+                background-color: white;
+                height: 60px;
+                width: auto;
+                margin: 10px;
+                padding: 10px;
+                float: left;
+                font-size: 40px;
+            }
+            .map:hover {
+                background-color: rgb(224, 224, 224);
+            }
+        </style>
+    </head>
+    <body>
+        {% for m in maps %}
+        <div class="map" onclick="window.location.replace('/new/{{m.id}}')">
+            {{m.name}}
+        </div>
+        {% endfor %}
+    </body>
+</html>

@@ -19,12 +19,49 @@
         height: 100%;
         width: 50%;
       }
+      #add {
+        padding: 0;
+        border: 1;
+        position: absolute;
+        top: 90vh;
+        left: 5vw;
+        z-index: 1;
+        height: 30px;
+        width: 200px;
+      }
+      #send {
+        padding: 0;
+        border: 0;
+        position: absolute;
+        top: 90vh;
+        left: 30vw;
+        z-index: 1;
+        height: 30px;
+        width: 300px;
+      }
+      #name {
+        padding: 0;
+        border: 1;
+        z-index: 1;
+        height: 26px;
+        width: 200px;
+      }
+      #sbutton {
+        padding: 0;
+        border: 1;
+        z-index: 1;
+        height: 30px;
+        width: 50px;
+      }
+
     </style>
   </head>
   <body>
-    <button type="button" onclick="add()">DOPISZ</button>
-    <input type="text" id="name">test</input>
-    <button type="button" onclick="send()">SEND</button>
+    <button id="add" type="button" onclick="add()">ADD</button>
+    <div id="send">
+      <input type="text" id="name"></input>
+      <button id="sbutton" type="button" onclick="send()">SEND</button>
+    </div>
     <div id="map"></div>
     <div id="pano"></div>
 

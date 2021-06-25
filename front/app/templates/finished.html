@@ -1,1 +1,31 @@
-ok elegancko wynik suma to {{distance}} metrow
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+        function next() {
+            window.location.replace("/maps");
+        }
+    </script>
+    <title>Street View split-map-panes</title>
+    <style type="text/css">
+      body {
+        font-size: 8vh;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+      }
+      #next {
+        font-size: 10vh;
+        height: 30vh;
+        width: 60vw;
+      }
+
+    </style>
+  </head>
+  <body>
+    Sum of errors was {{distance}} meters
+    <button id="next" type="button" onclick="next()">PLAY AGAIN</button>
+  </body>
+</html>

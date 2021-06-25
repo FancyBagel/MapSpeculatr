@@ -14,16 +14,6 @@ def addmap(request):
 	
 	return render(request, 'addmap.html')
 
-#def sendtomaps(request):
-#
-#    requests.post("http://127.0.0.1/api/v1/emails/send/", data={
-#        "receiver": order.customer_email,
-#        "subject": "Order Created",
-#        "body": "Hello %s, your order has been created. Total of: %s. Thanks" % (order.customer_name, order.total)
-#    })
-#
-#    return render(request, 'addmap.html')
-
 class FrontViewSet(viewsets.ViewSet):
 	def list(self, request):
 
@@ -37,13 +27,13 @@ class FrontViewSet(viewsets.ViewSet):
 		m = []
 		for e in r.json():
 			m.append(e['name'])
-			print(e['name'])
+			#print(e['name'])
 
 		#return re(request, 'addmap.html')
 		#return HttpResponse(r.json())
 
 		context = {
-			"maps" : m,
+			"maps" : r.json(),
 		}
 
 		return render(request, 'maps.html', context)
@@ -85,8 +75,6 @@ class FrontViewSet(viewsets.ViewSet):
 		#}
 		#return render(request, 'play.html', context)
 
-		data={'lat': 2137,'lng': 2137}
-
 		print(type(request.data))
 		#print((json.dumps(data)))
 
@@ -100,14 +88,14 @@ class FrontViewSet(viewsets.ViewSet):
 
 	def new(self, request, map):
 		if 'player_id' not in request.session:
-			return redirect('/maps')
+			return redirect('/login')
 
 		r=requests.get('http://host.docker.internal:8002/new/' + str(map) + '/' + str(request.session['player_id']))
 
 		#print(type(json.loads(r.json())))
 		#print(json.loads(r.json())['lat'])
 
-		return RResponse()
+		return redirect('/play')
 
 	def index(self, request):
 		#request.session['player_id'] = int(11)
@@ -162,4 +150,4 @@ class FrontViewSet(viewsets.ViewSet):
 	def logout(self, request):
 		if 'player_id' in request.session:
 			del request.session['player_id']
-		return Response("OK")
+		return RResponse("OK")

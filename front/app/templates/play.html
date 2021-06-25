@@ -51,6 +51,10 @@
             
           marker = new google.maps.Marker({
               position: mimuw,
+              icon: {
+                url: "{% static 'answer.png' %}",
+                anchor: new google.maps.Point(22, 22),
+              },
               map,
           });
           
@@ -72,7 +76,19 @@
         });
         marker = new google.maps.Marker({
           position: {lat: data.elat, lng: data.elng},
+          icon: {
+            url: "{% static 'correct.png' %}",
+            anchor: new google.maps.Point(22, 22),
+          },
           map,
+        });
+        let marker2 = new google.maps.Marker({
+            position: {lat: data.lat, lng: data.lng},
+            icon: {
+              url: "{% static 'answer.png' %}",
+              anchor: new google.maps.Point(22, 22),
+            },
+            map,
         });
       }
 
@@ -82,7 +98,6 @@
 
       function send() {
           json = { "lat": latLng.lat(), "lng": latLng.lng()}
-          document.getElementById("coords").innerHTML = JSON.stringify(json);
           var xhr = new XMLHttpRequest();
           xhr.onreadystatechange = function() {
             if(xhr.readyState === XMLHttpRequest.DONE) {
@@ -179,6 +194,5 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDukeE2EPVb-eRGltH24IL8KUXm4ysuwe0&callback=initialize&libraries=&v=weekly"
       async
     ></script>
-	<div id="coords"></div>
   </body>
 </html>
