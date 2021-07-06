@@ -7,7 +7,7 @@
       let panorama;
       let map;
       let marker;
-      let latlng;
+      let latlng = { lat: 52.211916160272324, lng: 20.98251877698795};
       var json = {};
           
       function processSVData(data, status) {
@@ -46,6 +46,8 @@
                       heading: 34,
                       pitch: 10,
                   },
+                  disableDefaultUI: true,
+                  showRoadLabels: false,
               }
           );
             

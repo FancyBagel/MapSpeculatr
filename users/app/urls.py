@@ -13,8 +13,11 @@ urlpatterns = [
     path('user_list', UserViewSet.as_view({
         'get': 'user_list',
     })),
-    path('user_info', UserViewSet.as_view({
+    path('user_info/<int:user_id>', UserViewSet.as_view({
         'get': 'user_info',
+    })),
+    path('user_names', UserViewSet.as_view({
+        'get': 'user_names'
     })),
 
 ]

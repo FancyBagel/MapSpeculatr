@@ -11,10 +11,7 @@ class UserViewSet(viewsets.ViewSet):
         info = json.loads(request.body)
         newName = info['name']
         password = info['password']
-        print(newName)
-        print(password)
-        print(User.objects.filter(name=newName).count())
-        print(User.objects.filter(name=newName))
+
         if not User.objects.filter(name=newName).count() == 0:
             return Response(status=404)
 
@@ -22,12 +19,10 @@ class UserViewSet(viewsets.ViewSet):
         return Response("OK")
 
     def login(self, request):
-        print(request.body)
+
         info = json.loads(request.body)
         newName = info['name']
         password = info['password']
-        print(newName)
-        print(password)
 
         if User.objects.filter(name=newName).count() == 0:
             return Response(status=404)
@@ -50,12 +45,23 @@ class UserViewSet(viewsets.ViewSet):
             })
         return Response(list)
 
-    def user_info(self, request):
-        userName = json.loads(request.body)['player_id']
-        info = {}
-        if User.objects.filter(name = userName).count() == 0:
+    def user_info(self, request, user_id):
+        if User.objects.filter(id = user_id).count() == 0:
             return Response(status=404)
-        user = User.objects.get(name = userName)
-        json = UserSerializer(user)
-        return Response(json)
+        user = User.objects.get(id = user_id)
+        serialized = UserSerializer(user)
+        return Response(serialized.data)
+
+    def user_names(self, request):
+        id_list = json.loads(request.body)
+
+        name_list = []
+        try:
+            for id in id_list:
+                name_list.append(User.objects.get(id=id).name)
+
+            return Response(json.dumps(name_list))
+        except ...:
+            return Response(status=404)
+
     

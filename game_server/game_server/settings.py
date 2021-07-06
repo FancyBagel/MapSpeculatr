@@ -25,7 +25,7 @@ SECRET_KEY = '08_9*gu%wf1o*0x92n%l7y!7q_nhu4*6kw+e41f%)$6^&4+(tp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['host.docker.internal', 'localhost']
+ALLOWED_HOSTS = ['10.56.1.171']
 
 
 # Application definition
@@ -80,8 +80,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'game_server',
         'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'db',
+        'PASSWORD': 'L3RNWnX2TB',
+        'HOST': '10.56.14.80',
         'PORT': '3306',
     }
 }

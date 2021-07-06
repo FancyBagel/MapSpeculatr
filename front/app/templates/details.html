@@ -1,0 +1,5 @@
+<ul>
+{% for s in stats %}
+<li><a href="{%url 'app:user_info' s.user_id %}">{{s.username}}</a>: {{s.highscore}}</li>
+{% endfor %}
+</ul>

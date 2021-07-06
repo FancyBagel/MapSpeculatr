@@ -14,6 +14,15 @@
                 float: left;
                 font-size: 40px;
             }
+            .play {
+                background-color: lightgrey;
+                height: auto;
+                width: auto;
+                margin: 2px;
+                padding: 2px;
+                float: right;
+                font-size: 40px;
+            }
             .map:hover {
                 background-color: rgb(224, 224, 224);
             }
@@ -21,8 +30,14 @@
     </head>
     <body>
         {% for m in maps %}
-        <div class="map" onclick="window.location.replace('/new/{{m.id}}')">
+        <div class="map">
             {{m.name}}
+            <div class="play" onclick="window.location.replace('/new/{{m.id}}')">
+                PLAY
+            </div>
+            <div class="play" onclick="window.location.replace('/map_info/{{m.id}}')">
+                SCORES
+            </div>
         </div>
         {% endfor %}
     </body>

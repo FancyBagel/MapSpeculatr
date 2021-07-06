@@ -9,3 +9,9 @@ class Location(models.Model):
     lat = models.FloatField()
     lng = models.FloatField()
     map = models.ForeignKey('Map', on_delete=models.CASCADE)
+
+class Stat(models.Model):
+    map = models.ForeignKey('Map', on_delete=models.CASCADE)
+    user_id = models.IntegerField()
+    highscore = models.IntegerField()
+    

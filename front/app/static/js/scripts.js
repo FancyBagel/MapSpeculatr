@@ -40,6 +40,9 @@ function initialize() {
                 heading: 34,
                 pitch: 10,
             },
+            clickToGo: false,
+            disableDefaultUI: true,
+            showRoadLabels: false,
         }
     );
 

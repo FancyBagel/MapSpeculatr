@@ -18,6 +18,9 @@ urlpatterns = [
     path('new/<int:map>', FrontViewSet.as_view({
         'get': 'new',
     }), name='new'),
+    path('map_info/<int:map_id>', FrontViewSet.as_view({
+        'get': 'map_info',
+    }), name='map_info'),
     path('main', FrontViewSet.as_view({
         'get': 'index',
     }), name='index'),
@@ -39,4 +42,7 @@ urlpatterns = [
     path('logout', FrontViewSet.as_view({
         'get': 'logout'
     }), name='logout'),
+    path('user_info/<int:user_id>', FrontViewSet.as_view({
+        'get': 'user_info'
+    }), name='user_info'),
 ]

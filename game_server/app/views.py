@@ -5,6 +5,7 @@ import json
 import requests
 from .models import Game
 import math
+import celery
 
 # Create your views here.
 def calc_dist(lat1, lon1, lat2, lon2):
@@ -23,27 +24,16 @@ def calc_dist(lat1, lon1, lat2, lon2):
 class ServerViewSet(viewsets.ViewSet):
     def location(self, request, map, player):
 
-        r=requests.get('http://host.docker.internal:8000/api/location/'+str(map))
-        print(r.json())
-        print(type(r.json()))
-        #return Response(json.loads(r.json()))
+        r=requests.get('http://10.56.4.216:8000/api/location/'+str(map))
 
-        #response = {"lat" : 21.37}
-        #print(json.dumps(response))
-        #return Response(data=json.dumps(response), headers={'content-type': 'application/json'})
         return Response(data=r.json(), headers={'content-type': 'application/json'})
 
     def new(self, request, map, player):
 
         Game.objects.filter(player=player).delete()
 
-        #r=requests.get('http://host.docker.internal:8000/api/location/'+str(map) + '/0')
-
-        #print(r.json()['lat'])
-
         g=Game(player=player, map=map, lat=0, lng=0, points=0, current=0)
         g.save()
-        print(g.current)
 
         return Response("ok")
 
@@ -51,20 +41,22 @@ class ServerViewSet(viewsets.ViewSet):
         if Game.objects.filter(player=player).count() == 0:
             return Response(status=404)
         g = Game.objects.get(player=player)
-        r=requests.get('http://host.docker.internal:8000/api/location/' + str(g.map) + '/' + str(g.current))
+        r=requests.get('http://10.56.4.216:8000/api/location/' + str(g.map) + '/' + str(g.current))
         response = {}
         if r.status_code == 404:
             response['status'] = 'no_map'
         if r.status_code == 204:
             response['status'] = 'game_finished'
             response['result'] = g.points
+            celery.current_app.send_task('app.tasks.add', [{'id': player, 'result': g.points, 'map': g.map}], queue='maps')
+            celery.current_app.send_task('app.tasks.modify', [{'user': player, 'score': g.points}], queue='users')
+            g.delete()
         if r.status_code == 200:
             response['status'] = 'game_on'
             response['data'] = {'lat': r.json()['lat'], 'lng': r.json()['lng']}
             g.lat = r.json()['lat']
             g.lng = r.json()['lng']
             g.save()
-        print(response)
 
         return Response(response)
 
@@ -72,29 +64,16 @@ class ServerViewSet(viewsets.ViewSet):
         if Game.objects.filter(player=player).count() == 0:
             return Response(status=404)
         g = Game.objects.get(player=player)
-        print(request.body)
         decoded = json.loads(request.body)
-        print(decoded)
-        #print(json.loads(str(json)))
+
         ans_lat = decoded['lat']
         ans_lng = decoded['lng']
-        print(ans_lat)
-        print(ans_lng)
+
         res = calc_dist(ans_lat, ans_lng, g.lat, g.lng)
         g.points = g.points + res
         g.current = g.current + 1
         g.save()
 
         resp = {'lat' : ans_lat, 'lng' : ans_lng, 'elat' : g.lat, 'elng' : g.lng}
-        print(resp)
-        return Response(data=resp)
 
-        #r=requests.get('http://host.docker.internal:8000/api/location/'+str(map))
-        #print(r.json())
-        #print(type(r.json()))
-        ##return Response(json.loads(r.json()))
-#
-        #response = {"lat" : 21.37}
-        #print(json.dumps(response))
-        ##return Response(data=json.dumps(response), headers={'content-type': 'application/json'})
-        #return Response(data=r.json(), headers={'content-type': 'application/json'})
+        return Response(data=resp)
