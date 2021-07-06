@@ -24,6 +24,9 @@ urlpatterns = [
     path('main', FrontViewSet.as_view({
         'get': 'index',
     }), name='index'),
+    path('', FrontViewSet.as_view({
+        'get': 'index',
+    }), name='blank'),
     path('confirm', FrontViewSet.as_view({
         'post': 'confirm',
     }), name='confirm'),
