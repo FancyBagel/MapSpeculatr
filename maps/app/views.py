@@ -15,13 +15,12 @@ class MapViewSet(viewsets.ViewSet):
     def create(self, request):
         if len(request.data["name"]) == 0:
             return Response(status=400)
-
-        map = Map(name=request.data["name"])
-        map.save()
-
         list = request.data["list"]
         if len(list) == 0:
             return Response(status=400)
+
+        map = Map(name=request.data["name"])
+        map.save()
 
         for element in list:
             location = Location(lat=element["lat"], lng=element["lng"], map=map)
